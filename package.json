@@ -1,0 +1,26 @@
+{
+  "name": "eksisong",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "node src/bin/www",
+    "eslint": "eslint src"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "morgan": "~1.9.0",
+    "node-sass-middleware": "0.9.8",
+    "pug": "2.0.0-beta11",
+    "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.14.0",
+    "eslint-config-google": "^0.9.1"
+  }
+}
