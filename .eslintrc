@@ -11,6 +11,8 @@
     "rules": {
         "require-jsdoc": "off",
         "no-unused-vars": "off",
-        "new-cap": "off"
+        "new-cap": "off",
+        "no-invalid-this": "off",
+        "max-len": "off"
     }
 }

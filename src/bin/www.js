@@ -5,6 +5,7 @@
  */
 
 import app from '../app.js';
+import * as crawler from '../work/crawl.js';
 let debug = require('debug')('eksisong:server');
 let http = require('http');
 
@@ -33,6 +34,8 @@ server.on('listening', onListening);
  * Crawl.
  */
 
+let url = 'https://eksisozluk.com/su-anda-calan-sarki--2405586';
+crawler.crawl(url);
 
 /**
  * Normalize a port into a number, string, or false.
