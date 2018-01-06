@@ -4,8 +4,7 @@
  * Module dependencies.
  */
 
-let app = require('../app');
-
+import app from '../app.js';
 let debug = require('debug')('eksisong:server');
 let http = require('http');
 
@@ -29,6 +28,11 @@ let server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+/**
+ * Crawl.
+ */
+
 
 /**
  * Normalize a port into a number, string, or false.

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "babel src -d dist",
-    "start": "node src/bin/www",
+    "start": "nodemon src/bin/www.js --exec babel-node",
+    "serve": "node dist/bin/www.js",
     "eslint": "eslint src"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.14.0",
-    "eslint-config-google": "^0.9.1"
+    "eslint-config-google": "^0.9.1",
+    "nodemon": "^1.14.8"
   }
 }
