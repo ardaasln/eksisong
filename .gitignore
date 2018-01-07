@@ -31,3 +31,6 @@ npm-debug.log
 
 #Babel output
 dist
+
+#YouTube Data API OAuth
+youtube_client.json
