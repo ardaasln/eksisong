@@ -34,3 +34,6 @@ dist
 
 #YouTube Data API OAuth
 youtube_client.json
+
+#Personal /* TODO * list for project
+todo.txt

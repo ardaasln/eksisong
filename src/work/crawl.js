@@ -5,37 +5,34 @@
 import request from 'request';
 import cheerio from 'cheerio';
 import * as async from 'async';
+import * as youtube from './youtube.js';
+import * as www from '../bin/www.js';
+
 
 let jsonSongArray = [{'songName': '', 'artist': ''}];
 
 /**
- * Crawl function.
+ * Crawling YouTube.
  */
 
 function findSongFromYoutubeUrl(url, callback) {
-  request(url, function(error, response, html) {
-    if (!error) {
-      let $ = cheerio.load(html);
+  // Getting id field from url
+  let splittedUrl = url.split(/[=]+/);
+  let id = splittedUrl[1];
 
-      let songName;
-      let artist;
-      console.log('test2');
-      $('.title.style-scope.ytd-video-primary-info-renderer').filter(function() {
-        console.log('test3');
-        let data = $(this);
-        let title = data.text();
-        let splittedSong = title.split(/[ ]+[-]+[ ]+/);
-        artist = splittedSong[0];
-        songName = splittedSong[1];
-        console.log(artist);
-        jsonSongArray.push({'songName': songName, 'artist': artist});
-        callback();
-      });
-    }
-  });
+  // Authorize a client with the loaded credentials, then call the YouTube API.
+  youtube.authorize(www.clientSecrets, {'params': {'id': id,
+                                        'part': 'snippet',
+                                        'fields': 'items/snippet'}},
+                                        youtube.videosListById,
+                                        callback);
 };
 
-function crawl(url) {
+/**
+ * Main crawl function.
+ */
+
+function crawl(url, mainCallback) {
   request(url, function(error, response, html) {
     if (!error) {
       let $ = cheerio.load(html);
@@ -43,7 +40,6 @@ function crawl(url) {
         function(callback) {
           let filteredHTML = $('.url').filter(function() {
             let data = $(this);
-            console.log('masdf');
             return data;
           });
           let pattern = /youtube/i;
@@ -64,15 +60,14 @@ function crawl(url) {
         function(callback) {
           for (const song of jsonSongArray) {
             console.log(song.songName + ' ' + song.artist);
-            console.log('asdf');
           }
           callback();
         },
       ]);
     }
+    mainCallback();
   });
 }
-
 
 /**
  * Exports.

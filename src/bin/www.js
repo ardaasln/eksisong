@@ -4,6 +4,9 @@
  * Module dependencies.
  */
 
+import * as async from 'async';
+import * as fs from 'fs';
+import * as youtube from '../work/youtube.js';
 import app from '../app.js';
 import * as crawler from '../work/crawl.js';
 let debug = require('debug')('eksisong:server');
@@ -31,11 +34,27 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
- * Crawl.
+ * YouTube Auth & Crawling
  */
 
-let url = 'https://eksisozluk.com/su-anda-calan-sarki--2405586';
-crawler.crawl(url);
+let clientSecrets = '';
+async.series([
+  function(callback) {
+    fs.readFile('youtube_client.json', function processClientSecrets(err, content) {
+      if (err) {
+        console.log('Error loading client secret file: ' + err);
+        return;
+      }
+      let parsedContent = JSON.parse(content);
+      clientSecrets = parsedContent;
+      youtube.authorize(parsedContent, callback);
+    });
+  },
+  function(callback) {
+    let url = 'https://eksisozluk.com/su-anda-calan-sarki--2405586';
+    crawler.crawl(url, callback);
+  },
+]);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -96,3 +115,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+export {clientSecrets};
