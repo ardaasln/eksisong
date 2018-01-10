@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
@@ -9,8 +7,8 @@ import * as fs from 'fs';
 import * as youtube from '../work/youtube.js';
 import app from '../app.js';
 import * as crawler from '../work/crawl.js';
-let debug = require('debug')('eksisong:server');
-let http = require('http');
+import * as http from 'http';
+import * as mongo from '../../db/mongo.js';
 
 /**
  * Get port from environment and store in Express.
@@ -32,6 +30,12 @@ let server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+/**
+ * Connect to db
+ */
+
+mongo.connect();
 
 /**
  * YouTube Auth & Crawling
@@ -113,7 +117,7 @@ function onListening() {
   let bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  console.log(('Listening on ' + bind));
 }
 
 export {clientSecrets};

@@ -33,12 +33,12 @@ function findSongFromYoutubeUrl(url, callback) {
  */
 
 function crawl(url, mainCallback) {
-  request(url, function(error, response, html) {
+  request(url, (error, response, html) => {
     if (!error) {
       let $ = cheerio.load(html);
       async.series([
-        function(callback) {
-          let filteredHTML = $('.url').filter(function() {
+        (callback) => {
+          let filteredHTML = $('.url').filter( () => {
             let data = $(this);
             return data;
           });
@@ -47,17 +47,17 @@ function crawl(url, mainCallback) {
           for (let i = 0; i < filteredHTML.length; i++) {
              elements.push(i);
           }
-          async.forEachOf(elements, function(elementVal, elementKey, callback2) {
+          async.forEachOf(elements, (elementVal, elementKey, callback2) => {
             if (pattern.test(filteredHTML[elementVal].attribs.href)) {
               findSongFromYoutubeUrl(filteredHTML[elementVal].attribs.href, callback2);
             } else {
               return callback2();
             }
-          }, function(result) {
+          }, (result) => {
               return callback();
           });
         },
-        function(callback) {
+        (callback) => {
           for (const song of jsonSongArray) {
             console.log(song.songName + ' ' + song.artist);
           }

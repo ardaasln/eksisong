@@ -13,9 +13,6 @@ let TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
- *
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
  */
 
 function authorize(credentials, requestData, callback, callback2) {
@@ -26,7 +23,7 @@ function authorize(credentials, requestData, callback, callback2) {
   let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, function(err, token) {
+  fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) {
       if (typeof requestData !== 'function') {
         getNewToken(oauth2Client, requestData, callback, callback2);
@@ -46,10 +43,6 @@ function authorize(credentials, requestData, callback, callback2) {
 /**
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
- *
- * @param {google.auth.OAuth2} oauth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback to call with the authorized
- *     client.
  */
 
 function getNewToken(oauth2Client, requestData, callback, callback2) {
@@ -62,9 +55,9 @@ function getNewToken(oauth2Client, requestData, callback, callback2) {
     input: process.stdin,
     output: process.stdout,
   });
-  rl.question('Enter the code from that page here: ', function(code) {
+  rl.question('Enter the code from that page here: ', (code) => {
     rl.close();
-    oauth2Client.getToken(code, function(err, token) {
+    oauth2Client.getToken(code, (err, token) => {
       if (err) {
         console.log('Error while trying to retrieve access token', err);
         return;
@@ -164,7 +157,7 @@ function videosListById(auth, requestData, callback) {
   let service = google.youtube('v3');
   let parameters = removeEmptyParameters(requestData['params']);
   parameters['auth'] = auth;
-  service.videos.list(parameters, function(err, response) {
+  service.videos.list(parameters, (err, response) => {
     if (err) {
       console.log('The YouTube Data API returned an error: ' + err);
       return;
