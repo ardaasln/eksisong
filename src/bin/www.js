@@ -8,7 +8,7 @@ import * as youtube from '../work/youtube.js';
 import app from '../app.js';
 import * as crawler from '../work/crawl.js';
 import * as http from 'http';
-import * as mongo from '../../db/mongo.js';
+import * as mongo from '../db/mongo.js';
 
 /**
  * Get port from environment and store in Express.
