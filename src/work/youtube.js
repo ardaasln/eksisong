@@ -162,7 +162,7 @@ function videosListById(auth, requestData, callback) {
   service.videos.list(parameters, (err, response) => {
     if (err) {
       console.log('The YouTube Data API returned an error: ' + err);
-      return;
+      return callback();
     }
     // There may be removed videos so check for the length
     if (response.items.length > 0) {

@@ -42,8 +42,10 @@ mongo.connect();
  */
 
 let clientSecrets = '';
+let mainUrl = 'https://eksisozluk.com/su-anda-calan-sarki--2405586';
+
 async.series([
-  function(callback) {
+  (callback) => {
     fs.readFile('youtube_client.json', function processClientSecrets(err, content) {
       if (err) {
         console.log('Error loading client secret file: ' + err);
@@ -54,11 +56,20 @@ async.series([
       youtube.authorize(parsedContent, callback);
     });
   },
-  function(callback) {
-    let url = 'https://eksisozluk.com/su-anda-calan-sarki--2405586';
-    crawler.crawl(url, callback);
+  (callback) => {
+    crawler.crawl(mainUrl, callback);
   },
-]);
+], (err, results) => {
+    let elements = [];
+    let url = mainUrl;
+    for (let i = 2; i <= results[1]; i++) {
+       elements.push(i);
+    }
+    async.forEachOfLimit(elements, 2, (elementVal, elementKey, callback) => {
+      url = mainUrl + '?p=' + elementVal;
+      crawler.crawl(url, callback);
+    });
+  });
 
 /**
  * Normalize a port into a number, string, or false.

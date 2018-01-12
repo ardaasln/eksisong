@@ -31,6 +31,8 @@ function findSongFromYoutubeUrl(url, callback) {
  */
 
 function crawl(url, mainCallback) {
+  let pageCount;
+  console.log(url);
   request(url, (error, response, html) => {
     if (!error) {
       let $ = cheerio.load(html);
@@ -52,15 +54,21 @@ function crawl(url, mainCallback) {
               return callback2();
             }
           }, (result) => {
-              return callback();
+              if (url.includes('?p=')) {
+                return mainCallback();
+              }
+              let pageCountFilter = $('.pager').filter( () => {
+                let data = $(this);
+                return data;
+              });
+              return mainCallback(null, pageCountFilter[0].attribs['data-pagecount']);
           });
         },
-        (callback) => {
-          callback();
-        },
       ]);
+    } else {
+      console.log('error : ' + error);
+      return mainCallback();
     }
-    mainCallback();
   });
 }
 
