@@ -9,8 +9,6 @@ import * as youtube from './youtube.js';
 import * as www from '../bin/www.js';
 
 
-let jsonSongArray = [{'songName': '', 'artist': ''}];
-
 /**
  * Crawling YouTube.
  */
@@ -58,9 +56,6 @@ function crawl(url, mainCallback) {
           });
         },
         (callback) => {
-          for (const song of jsonSongArray) {
-            console.log(song.songName + ' ' + song.artist);
-          }
           callback();
         },
       ]);

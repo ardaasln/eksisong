@@ -1,5 +1,6 @@
 import {MongoClient as mongoClient} from 'mongodb';
-import assert from 'assert';
+
+let client;
 
 async function connect() {
   // Connection URL
@@ -7,17 +8,25 @@ async function connect() {
   // Database Name
   const dbName = 'eksisong';
 
-  let client;
-
   try {
     client = await mongoClient.connect(url);
     console.log('Connected to Mongo');
-
-    const db = client.db(dbName);
-    return db;
   } catch (err) {
     console.log(err.stack);
   }
 }
 
-export {connect};
+async function insertOne(object, collectionName, dbName = 'eksisong') {
+  try {
+    let count = await client.db(dbName).collection(collectionName).find(object).count();
+    if (count > 0) {
+      return;
+    } else {
+      await client.db(dbName).collection(collectionName).insertOne(object);
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+}
+
+export {connect, insertOne};

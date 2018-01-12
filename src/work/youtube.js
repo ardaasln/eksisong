@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import * as readline from 'readline';
 import * as google from 'googleapis';
 import googleAuth from 'google-auth-library';
+import * as mongo from '../db/mongo.js';
+
 
 // If modifying these scopes, delete your previously saved credentials
 
@@ -165,6 +167,10 @@ function videosListById(auth, requestData, callback) {
     // There may be removed videos so check for the length
     if (response.items.length > 0) {
       console.log(response.items[0].snippet.title);
+      let splittedUrl = response.items[0].snippet.title.split((/[ ][-][ ]+/));
+      let artist = splittedUrl[0];
+      let songName = splittedUrl[1];
+      mongo.insertOne({songName: songName, artist: artist}, 'songs');
     }
     return callback();
   });
