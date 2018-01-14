@@ -165,7 +165,7 @@ function videosListById(auth, requestData, callback) {
       return callback();
     }
     // There may be removed videos so check for the length
-    if (response.items.length > 0) {
+    if (Object.keys(response).length > 0 && response.items.length > 0) {
       console.log(response.items[0].snippet.title);
       let splittedUrl = response.items[0].snippet.title.split((/[ ][-][ ]+/));
       let artist = splittedUrl[0];

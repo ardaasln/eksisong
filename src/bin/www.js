@@ -57,6 +57,7 @@ async.series([
     });
   },
   (callback) => {
+    // Crawl once to get total page count
     crawler.crawl(mainUrl, callback);
   },
 ], (err, results) => {

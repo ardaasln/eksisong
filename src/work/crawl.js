@@ -8,7 +8,6 @@ import * as async from 'async';
 import * as youtube from './youtube.js';
 import * as www from '../bin/www.js';
 
-
 /**
  * Crawling YouTube.
  */
@@ -36,35 +35,31 @@ function crawl(url, mainCallback) {
   request(url, (error, response, html) => {
     if (!error) {
       let $ = cheerio.load(html);
-      async.series([
-        (callback) => {
-          let filteredHTML = $('.url').filter( () => {
+      let filteredHTML = $('.url').filter( () => {
+        let data = $(this);
+        return data;
+      });
+      let pattern = /youtube/i;
+      let elements = [];
+      for (let i = 0; i < filteredHTML.length; i++) {
+        elements.push(i);
+      }
+      async.forEachOf(elements, (elementVal, elementKey, callback2) => {
+        if (pattern.test(filteredHTML[elementVal].attribs.href)) {
+          findSongFromYoutubeUrl(filteredHTML[elementVal].attribs.href, callback2);
+        } else {
+          return callback2();
+        }
+      }, (result) => {
+          if (url.includes('?p=')) {
+            return mainCallback();
+          }
+          let pageCountFilter = $('.pager').filter( () => {
             let data = $(this);
             return data;
           });
-          let pattern = /youtube/i;
-          let elements = [];
-          for (let i = 0; i < filteredHTML.length; i++) {
-             elements.push(i);
-          }
-          async.forEachOf(elements, (elementVal, elementKey, callback2) => {
-            if (pattern.test(filteredHTML[elementVal].attribs.href)) {
-              findSongFromYoutubeUrl(filteredHTML[elementVal].attribs.href, callback2);
-            } else {
-              return callback2();
-            }
-          }, (result) => {
-              if (url.includes('?p=')) {
-                return mainCallback();
-              }
-              let pageCountFilter = $('.pager').filter( () => {
-                let data = $(this);
-                return data;
-              });
-              return mainCallback(null, pageCountFilter[0].attribs['data-pagecount']);
-          });
-        },
-      ]);
+          return mainCallback(null, pageCountFilter[0].attribs['data-pagecount']);
+        });
     } else {
       console.log('error : ' + error);
       return mainCallback();
