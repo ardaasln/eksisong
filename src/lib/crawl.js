@@ -6,7 +6,7 @@ import request from 'request';
 import cheerio from 'cheerio';
 import * as async from 'async';
 import * as youtube from './youtube.js';
-import * as www from '../bin/www.js';
+import {clientSecrets} from '../background/init.js';
 
 /**
  * Crawling YouTube.
@@ -18,11 +18,7 @@ function findSongFromYoutubeUrl(url, callback) {
   let id = splittedUrl[1];
 
   // Authorize a client with the loaded credentials, then call the YouTube API.
-  youtube.authorize(www.clientSecrets, {'params': {'id': id,
-                                        'part': 'snippet',
-                                        'fields': 'items/snippet'}},
-                                        youtube.videosListById,
-                                        callback);
+  youtube.authorize(clientSecrets, {'params': {'id': id, 'part': 'snippet', 'fields': 'items/snippet'}}, youtube.videosListById, callback);
 };
 
 /**
@@ -51,15 +47,15 @@ function crawl(url, mainCallback) {
           return callback2();
         }
       }, (result) => {
-          if (url.includes('?p=')) {
-            return mainCallback();
-          }
-          let pageCountFilter = $('.pager').filter( () => {
-            let data = $(this);
-            return data;
-          });
-          return mainCallback(null, pageCountFilter[0].attribs['data-pagecount']);
+        if (url.includes('?p=')) {
+          return mainCallback();
+        }
+        let pageCountFilter = $('.pager').filter( () => {
+          let data = $(this);
+          return data;
         });
+        return mainCallback(null, pageCountFilter[0].attribs['data-pagecount']);
+      });
     } else {
       console.log('error : ' + error);
       return mainCallback();

@@ -3,8 +3,9 @@ let path = require('path');
 let favicon = require('serve-favicon');
 let sassMiddleware = require('node-sass-middleware');
 
-let index = require('./routes/index');
-let users = require('./routes/users');
+import helmet from 'helmet';
+import {router as index} from './routes/index.js';
+import {router as users} from './routes/users.js';
 
 let app = express();
 
@@ -22,6 +23,7 @@ app.use(sassMiddleware({
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true,
 }));
+app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
