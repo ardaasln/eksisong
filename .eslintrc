@@ -14,6 +14,7 @@
         "new-cap": "off",
         "no-invalid-this": "off",
         "max-len": "off",
-        "guard-for-in": "off"
+        "guard-for-in": "off",
+        "indent": ["error", 2]
     }
 }
