@@ -6,12 +6,12 @@ import * as http from 'http';
 
 import app from '../app.js';
 
-import backgroundTask as bg from '../background/init.js'
+import {backgroundTask as bg} from '../background/init.js'
 
 /**
  * Start background task
  */
- 
+
 bg();
 
 /**
