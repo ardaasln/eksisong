@@ -18,7 +18,7 @@ function findSongFromYoutubeUrl(url, callback) {
   let id = splittedUrl[1];
 
   // Authorize a client with the loaded credentials, then call the YouTube API.
-  youtube.authorize(clientSecrets, {'params': {'id': id, 'part': 'snippet', 'fields': 'items/snippet'}}, youtube.videosListById, callback);
+  youtube.getVideoById({'params': {'id': id, 'part': 'snippet', 'fields': 'items/snippet'}}, callback);
 };
 
 /**

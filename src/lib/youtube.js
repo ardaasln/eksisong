@@ -4,6 +4,7 @@ import * as google from 'googleapis';
 import googleAuth from 'google-auth-library';
 import * as mongo from '../db/mongo.js';
 
+let oauth2Client;
 
 // If modifying these scopes, delete your previously saved credentials
 
@@ -17,27 +18,20 @@ let TOKEN_PATH = TOKEN_DIR + 'google-apis-nodejs-quickstart.json';
  * given callback function.
  */
 
-function authorize(credentials, requestData, callback, callback2) {
+function authorize(credentials, callback) {
   let clientSecret = credentials.installed.client_secret;
   let clientId = credentials.installed.client_id;
   let redirectUrl = credentials.installed.redirect_uris[0];
   let auth = new googleAuth();
-  let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+  oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) {
-      if (typeof requestData !== 'function') {
-        getNewToken(oauth2Client, requestData, callback, callback2);
-      } else {
-        getNewToken(oauth2Client, requestData);
-      }
+      getNewToken(callback);
     } else {
-      if (typeof requestData === 'function') {
-        return requestData();
-      }
       oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client, requestData, callback2);
+      return callback();
     }
   });
 }
@@ -47,7 +41,7 @@ function authorize(credentials, requestData, callback, callback2) {
  * execute the given callback with the authorized OAuth2 client.
  */
 
-function getNewToken(oauth2Client, requestData, callback, callback2) {
+function getNewToken(callback) {
   let authUrl = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
@@ -66,11 +60,7 @@ function getNewToken(oauth2Client, requestData, callback, callback2) {
       }
       oauth2Client.credentials = token;
       storeToken(token);
-      if (typeof requestData === 'function') {
-        return requestData();
-      } else {
-        callback(oauth2Client, requestData, callback2);
-      }
+      return callback();
     });
   });
 }
@@ -155,10 +145,14 @@ function createResource(properties) {
   return resource;
 }
 
-function videosListById(auth, requestData, callback) {
+function getVideoById(requestData, callback) {
+  if (typeof oauth2Client == 'undefined') {
+    console.log('There is a problem with YouTube Data API authentication');
+    return;
+  }
   let service = google.youtube('v3');
   let parameters = removeEmptyParameters(requestData['params']);
-  parameters['auth'] = auth;
+  parameters['auth'] = oauth2Client;
   service.videos.list(parameters, (err, response) => {
     if (err) {
       console.log('The YouTube Data API returned an error: ' + err);
@@ -176,4 +170,4 @@ function videosListById(auth, requestData, callback) {
   });
 }
 
-export {authorize, videosListById};
+export {authorize, getVideoById};
