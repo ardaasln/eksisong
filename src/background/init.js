@@ -39,6 +39,10 @@ function backgroundTask() {
       crawler.crawl(mainUrl, callback);
     },
   ], (err, results) => {
+    if (err) {
+      console.log(err.stack);
+      return err;
+    }
     let elements = [];
     let url = mainUrl;
     for (let i = 2; i <= results[1]; i++) {
