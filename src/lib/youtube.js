@@ -3,6 +3,7 @@ import * as readline from 'readline';
 import * as google from 'googleapis';
 import googleAuth from 'google-auth-library';
 import * as mongo from '../db/mongo.js';
+import _ from 'lodash';
 
 let oauth2Client;
 
@@ -28,7 +29,7 @@ function authorize(credentials, callback) {
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) {
-      getNewToken(callback);
+      return getNewToken(callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
       return callback();
@@ -146,7 +147,7 @@ function createResource(properties) {
 }
 
 function getVideoById(requestData, callback) {
-  if (typeof oauth2Client == 'undefined') {
+  if (_.isUndefined(oauth2Client)) {
     console.log('There is a problem with YouTube Data API authentication');
     return;
   }

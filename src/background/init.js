@@ -41,6 +41,7 @@ function backgroundTask() {
   ], (err, results) => {
     if (err) {
       console.log(err.stack);
+      return err;
     }
     let elements = [];
     let url = mainUrl;
